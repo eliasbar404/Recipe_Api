@@ -8,7 +8,8 @@ import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import Index from './Pages/Index';
+import { RouterProvider,} from "react-router-dom";
+import router from './Router';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -18,7 +19,7 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<Index/>);
+        root.render(<RouterProvider router={router}/>);
     },
     progress: {
         color: '#4B5563',
