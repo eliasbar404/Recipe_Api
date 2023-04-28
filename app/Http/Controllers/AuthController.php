@@ -34,7 +34,7 @@ class AuthController extends Controller
         }
         return $this->createNewToken($token);
         // $user = $this->createNewToken($token);
-        // return response()->json($user->original['user']);
+        // return response()->json($user->original->access_token);
    
     }
     /**

@@ -10,6 +10,9 @@ import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { RouterProvider,} from "react-router-dom";
 import router from './Router';
+// import Redux
+import store from './Redux/Store';
+import { Provider } from 'react-redux';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -19,7 +22,11 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<RouterProvider router={router}/>);
+        root.render(
+            <Provider store={store}>
+                <RouterProvider router={router}/>
+            </Provider>
+        );
     },
     progress: {
         color: '#4B5563',

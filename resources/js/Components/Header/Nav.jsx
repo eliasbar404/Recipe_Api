@@ -14,16 +14,16 @@ const Nav = ({toggle}) => {
     <nav className='w-[1200px] tablet:w-[100%] mx-auto py-3 flex justify-between items-center z-10'>
         <Logo w={'50px'} h={'50px'}/>
         
-        <div className='tablet:hidden'>
+        {/* <div className='tablet:hidden'>
             <Search/>
-        </div>
+        </div> */}
         
         {/* card wish login */}
         <div className='flex space-x-5'>
             <Menu toggle={toggle}/>
-            <Wish/>
-            <Cart/>
-            <Link to='/login'><Account/></Link>
+            {/* <Wish/> */}
+            {/* <Cart/> */}
+            <Link className='flex-col' to='/login'><Account/><span className=''></span></Link>
             
         </div>
     </nav>

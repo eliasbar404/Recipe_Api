@@ -1,16 +1,32 @@
 import * as React from 'react';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import token from '../../Helpers/Token';
+// import { fetchUser } from '@/Redux/Slices/authSlice';
+import { useDispatch } from 'react-redux';
+import { login } from '@/Redux/Slices/authSlice';
 
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = data => {
-            
-        axios.post('http://127.0.0.1:8000/api/auth/login',data).then((res)=>console.log(res)).catch((error)=>console.log(error))
+        
+        // login(data)
         // console.log(data)
+
+        // fetchUser();
+
+
+            
+        axios.post('http://127.0.0.1:8000/api/auth/login',data).then((res)=>{
+            token("SET",res.data.access_token);
+            navigate('/');
+        }).catch((error)=>console.log(error))
+        console.log(data)
     
     
     };
