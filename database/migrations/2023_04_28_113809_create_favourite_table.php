@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('favourite', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
-            $table->string('recipe_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('recipe_id');
             
             // Foreing keys
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('recipe_id')->references('id')->on('recipes');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
             $table->timestamps();
         });
     }

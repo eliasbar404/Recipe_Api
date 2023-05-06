@@ -13,18 +13,19 @@ return new class extends Migration
     {
         Schema::create('recipes', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('title')->unique();
             $table->longText('description');
-            $table->string("origin");
+            $table->string("origin")->nullable();
             $table->enum('difficulty',['easy','medium','hard']);
-            $table->int('time');
-            $table->string('category_id');
+            $table->integer('time');
             $table->boolean('is_free')->default(true);
+            $table->integer('views')->default(0);
 
             // Foreing Keys
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
 
             $table->timestamps();

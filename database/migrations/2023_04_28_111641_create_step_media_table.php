@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('step_media', function (Blueprint $table) {
             $table->id();
-            $table->string('step_id');
-            $table->enum('type',['image','vedio']);
-            $table->string('media');
-            //
+            $table->unsignedBigInteger('step_id');
+            $table->enum('type',['image','video']);
+            $table->string('media')->nullable();
+
             // Foreing Keys
-            $table->foreign('step_id')->references('id')->on('steps');
+            $table->foreign('step_id')->references('id')->on('steps')->onDelete('cascade');
             $table->timestamps();
         });
     }

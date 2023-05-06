@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('followers', function (Blueprint $table) {
             $table->id();
-            $table->string('follower_id');
-            $table->string('followed_id');
+            $table->unsignedBigInteger('follower_id');
+            $table->unsignedBigInteger('followed_id');
 
 
-            $table->foreign('follower_id')->references('id')->on('users');
-            $table->foreign('followed_id')->references('id')->on('users');
+            $table->foreign('follower_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('followed_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

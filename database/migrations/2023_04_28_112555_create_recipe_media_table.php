@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('recipe_media', function (Blueprint $table) {
             $table->id();
-            $table->string('recipe_id');
-            $table->enum('type',['image','vedio']);
+            $table->unsignedBigInteger('recipe_id');
+            $table->enum('type',['image','video']);
             $table->string('media');
 
             // Foreing Keys
-            $table->foreign('recipe_id')->references('id')->on('recipes');
+            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
             $table->timestamps();
         });
     }
