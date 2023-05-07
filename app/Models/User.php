@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -61,4 +63,30 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims() {
         return [];
     }    
+
+    /**
+     * Get the followers for the user.
+     */
+    public function followers(): HasMany
+    {
+        return $this->hasMany(Follower::class);
+    }
+
+    /**
+     * Get the Recipes for the user.
+     */
+    public function recipes(): HasMany
+    {
+        return $this->hasMany(Recipe::class);
+    }
+
+    /**
+     * Get the favourites for the user.
+     */
+
+    public function favourites(): HasManyThrough
+    {
+        return $this->hasManyThrough(Favourite::class,Recipe::class);
+    }
+    
 }

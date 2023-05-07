@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Favourite extends Model
 {
@@ -15,4 +16,12 @@ class Favourite extends Model
         'user_id',
         'recipe_id'
     ];
+
+    /**
+     * Get the user that owns the favourite.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
