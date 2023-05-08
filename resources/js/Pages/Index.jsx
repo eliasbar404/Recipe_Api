@@ -11,17 +11,19 @@ const Index = () => {
     // dispatch(fetchUser())
     axios.get('http://127.0.0.1:8000/api/auth/user-profile',{headers: {'Authorization': `Bearer ${token("GET")}`}}).then(
       (res)=> 
-      // console.log(res.data.name)
-      dispatch(login(res.data.name))
+    //   console.log(res.data.name)
+      dispatch(login(res.data))
     
   )
+
+
   }, [])
   
   const name = useSelector((state)=>state.auth.user.name)
   return (
     <div className='font-bold h-[2000px]'>
       <Header/>
-      <div>{name}</div>
+      {/* <div>{name}</div> */}
       {/* {name && <div>{name}</div>} */}
       {/* <div>{name}</div> */}
       {/* <div className='z-1'>

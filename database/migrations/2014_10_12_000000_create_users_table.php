@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('first_name')->unique();
             $table->string('last_name');
-            $table->string('name');
+            // $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role',['admin','user'])->default('user');

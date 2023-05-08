@@ -6,6 +6,7 @@ import token from '../../Helpers/Token';
 // import { fetchUser } from '@/Redux/Slices/authSlice';
 import { useDispatch } from 'react-redux';
 import { login } from '@/Redux/Slices/authSlice';
+import Swal from 'sweetalert2'
 
 
 const Login = () => {
@@ -13,7 +14,7 @@ const Login = () => {
     const navigate = useNavigate();
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = data => {
+    const onSubmit = async (data )=> {
         
         // login(data)
         // console.log(data)
@@ -22,11 +23,24 @@ const Login = () => {
 
 
             
-        axios.post('http://127.0.0.1:8000/api/auth/login',data).then((res)=>{
-            token("SET",res.data.access_token);
-            navigate('/');
-        }).catch((error)=>console.log(error))
-        console.log(data)
+        // axios.post('http://127.0.0.1:8000/api/auth/login',data).then( async(res)=>{
+        //     // console.log(res.data.user)
+
+        // }).catch((error)=>console.log(error))
+        // // console.log(data)
+
+        const res  =  await axios.post('http://127.0.0.1:8000/api/auth/login',data);
+        await token("SET",res.data.access_token);
+        // login success alert
+        await Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Your login  has been successed',
+            showConfirmButton: false,
+            timer: 2000
+        })
+        navigate('/');
+
     
     
     };
