@@ -14,6 +14,7 @@ export const fetchUser = createAsyncThunk(
 const initialState = {
     status: false,
     user:{
+        id:"",
         first_name:"",
         last_name:"",
         email:"",
@@ -30,6 +31,7 @@ export const authSlice = createSlice({
     reducers: {
         login:(state,action)=>{
             state.status = true
+            state.user.id=action.payload.id
             state.user.first_name=action.payload.first_name
             state.user.last_name=action.payload.last_name
             state.user.email=action.payload.email

@@ -1,20 +1,34 @@
 import * as React from 'react';
 import { useForm } from "react-hook-form";
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 import axios from 'axios';
+import Swal from 'sweetalert2'
 
 
 const Register = () => {
+    const navigate = useNavigate();
 
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = data => {
             
-        // axios.post('http://127.0.0.1:8000/api/auth/login',data).then((res)=>console.log(res)).catch((error)=>console.log(error))
-        console.log(data)
-    
+        axios.post('http://127.0.0.1:8000/api/auth/register',data)
+        .then(async(res)=>{
+            if(res.data.message){
+                await Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'You are registered successefully',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                await navigate('/login');
+            }
+        })
+        .catch((error)=>console.log(error))
+        // console.log(data)
     
     };
 
