@@ -4,11 +4,21 @@ import Radio from '@mui/joy/Radio';
 import RadioGroup from '@mui/joy/RadioGroup';
 import { useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
+import token from '@/Helpers/Token';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateProfile = () => {
+    const navigate = useNavigate();
     const user  = useSelector((state)=>state.auth.user);
+    const [file, setFile] = React.useState(null);
+
+    const handleFileChange = (event) => {
+        setFile(event.target.files[0]);
+    }
     const form = useForm({
         defaultValues:{
+            id:user.id,
             first_name:user.first_name,
             last_name:user.last_name,
             email:user.email,
@@ -22,7 +32,27 @@ const UpdateProfile = () => {
     const { register,handleSubmit, watch, formState: { errors } } = form;
     const onSubmit = data =>{
 
-        console.log(data);
+        
+        axios.post('http://127.0.0.1:8000/api/user',{...data,image:file},{headers: {'Authorization': `Bearer ${token("GET")}`,'Content-Type': 'multipart/form-data'}}).then(
+            async (res)=>{
+
+                if(res.data){
+                    await Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Update your profile successfully',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+
+                    navigate('/profile');
+
+                }
+
+
+            } 
+        )
+
 
     } 
     return (
@@ -74,7 +104,7 @@ const UpdateProfile = () => {
                 <img className="h-16 w-16 object-cover rounded-full" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1361&q=80" alt="Current profile photo" />
             </div>
             <div className="flex">
-                <input type="file" {...register("image", { required: true })} className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
+                <input type="file" onChange={handleFileChange} className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"/>
             </div>
         </div>
         {/* 6 col */}

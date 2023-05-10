@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use App\Http\Controllers\CategoryController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+// Auth Routes
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
@@ -26,7 +27,10 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);    
 });
-
 // Gategory Routes
 Route::post('/categories', [CategoryController::class, 'setOne']);
 Route::get('/categories',  [CategoryController::class, 'getAll']); 
+// Users Routes
+
+Route::post('/user', [UserController::class, 'updateUser']);
+Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
