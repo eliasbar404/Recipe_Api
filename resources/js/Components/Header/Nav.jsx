@@ -5,6 +5,7 @@ import Logo from '../Logo';
 import Account from '../Icons/Account';
 // import Cart from '../Icons/Cart';
 import Wish from '../Icons/Wish';
+import Notification from '../Icons/Notification';
 // import Menu from '../Icons/Menu';
 import axios from 'axios';
 
@@ -101,7 +102,7 @@ import { useSelector } from 'react-redux';
 import token from '@/Helpers/Token';
 
 const navigation = [
-    { name: 'Contact Us', href: '#', current:false },
+    { name: 'Contact Us', href: 'contact', current:false },
     { name: 'About Us', href: '#', current: false },
     { name: 'Information', href: '#', current: false },
 ]
@@ -143,9 +144,9 @@ export default function Nav() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
-                        href={item.href}
+                        to={item.href}
                         className={classNames(
                           item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium'
@@ -153,7 +154,7 @@ export default function Nav() {
                         aria-current={item.current ? 'page' : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
@@ -173,6 +174,7 @@ export default function Nav() {
                 {/* Profile dropdown */}
                 { online && <Menu as="div" className="relative ml-3">
                   <div className='flex gap-6'>
+                    <Notification/>
                     <Wish/>
                     <Menu.Button className="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="sr-only">Open user menu</span>
@@ -181,7 +183,6 @@ export default function Nav() {
                         src={`http://127.0.0.1:8000/uploads/${user.image}`}
                         alt=""
                       />
-                       
                     </Menu.Button>
                     
                   </div>
@@ -210,7 +211,7 @@ export default function Nav() {
                       <Menu.Item>
                         {({ active }) => (
                           <Link
-                            to="/profile"
+                            to="/user/profile"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                           >
                             My Profile
@@ -259,10 +260,10 @@ export default function Nav() {
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 px-2 pb-3 pt-2">
               {navigation.map((item) => (
-                <Disclosure.Button
+                <Link
                   key={item.name}
                   as="a"
-                  href={item.href}
+                  to={item.href}
                   className={classNames(
                     item.current ? 'bg-slate-100 text-black font-bold' : 'text-black hover:bg-orange-700 hover:text-white',
                     'block rounded-md px-3 py-2 text-base font-medium'
@@ -270,7 +271,7 @@ export default function Nav() {
                   aria-current={item.current ? 'page' : undefined}
                 >
                   {item.name}
-                </Disclosure.Button>
+                </Link>
               ))}
             </div>
           </Disclosure.Panel>

@@ -19,6 +19,7 @@ class Recipe extends Model
         'title',
         'description',
         'origin',
+        'time',
         'difficulty',
         'views'
     ];
@@ -54,7 +55,13 @@ class Recipe extends Model
     {
         return $this->hasMany(Review::class);
     }
-
+    /**
+     * Get the favourite that owns the recipe.
+     */
+    public function favourites(): HasMany
+    {
+        return $this->hasMany(Favourite::class);
+    }
 
     /**
      * Get the user that owns the recipe.
@@ -63,4 +70,6 @@ class Recipe extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+
 }

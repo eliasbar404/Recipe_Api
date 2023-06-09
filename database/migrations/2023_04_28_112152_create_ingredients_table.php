@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('ingredients', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('recipe_id');
-            $table->string('name');
-            $table->string('quantity');
+            $table->longText('description');
             $table->string('media')->nullable();
 
             // Foreing Keys

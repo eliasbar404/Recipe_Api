@@ -36,7 +36,7 @@ const Profile = () => {
         </div>
 
 
-            <Link to="/profile/update" className='font-mono font-bold bg-sky-600 text-slate-50 text-2xl rounded-sm px-3 py-1 float-right mt-10'>Update</Link>
+            <Link to="/user/profile/update" className='font-mono font-bold bg-sky-600 text-slate-50 text-2xl rounded-sm px-3 py-1 float-right mt-10'>Update</Link>
 
 
     </div>
