@@ -120,14 +120,14 @@ class RecipeController extends Controller
         $request->validate([
 
             // "user_id"           =>"required",
-            "categories"        =>"required|array",
+            "categories"        =>"required",
             "title"             =>"required",
             "description"       =>"required",
             "difficulty"        =>"required",
             "time"              =>"required",
-            "steps"             =>"required|array",
-            "ingredients"       =>"required|array",
-            "images"            =>"required|array"
+            "steps"             =>"required",
+            "ingredients"       =>"required",
+            "images"            =>"required"
 
         ]);
 
@@ -212,7 +212,7 @@ class RecipeController extends Controller
         // -------------------------------
         for($i=0;$i<count($request->images);$i++){
 
-            if(isset($request["images"][$i])){
+            // if(isset($request["images"][$i])){
 
                 // $filename = Str::random(32).".".$request["files"]["recipe_media"][$i]->getClientOriginalExtension();
                 // $request["files"]["recipe_media"][$i]->move('uploads/', $filename);
@@ -221,9 +221,9 @@ class RecipeController extends Controller
                 Recipe_media::create([
                     "recipe_id"   =>$recipe_id,
                     // "type"        =>$request->images[$i]["type"],
-                    "image_url"       =>$request->images[$i]["image_url"]
+                    "image_url"       =>$request->images[$i]
                 ]);
-            }
+            // }
         }
     
 
@@ -251,16 +251,24 @@ class RecipeController extends Controller
             "comment" => "required",
         ]);
 
-        Review::firstOrCreate(
-            [
-                "user_id"  =>$request->user_id,
-                "recipe_id"=>$request->recipe_id,
-            ]
-            ,[
+        // Review::firstOrCreate(
+        //     [
+        //         "user_id"  =>$request->user_id,
+        //         "recipe_id"=>$request->recipe_id,
+        //     ]
+        //     ,[
+        //     "user_id"  =>$request->user_id,
+        //     "recipe_id"=>$request->recipe_id,
+        //     "rating"   =>$request->rating,
+        //     "comment"  =>$request->comment
+        // ]);
+
+        Review::create([
             "user_id"  =>$request->user_id,
             "recipe_id"=>$request->recipe_id,
             "rating"   =>$request->rating,
             "comment"  =>$request->comment
+
         ]);
 
         return response("this is create");
