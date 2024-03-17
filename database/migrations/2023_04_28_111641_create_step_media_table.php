@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('step_id');
             $table->enum('type',['image','video']);
-            $table->string('media')->nullable();
+            $table->string('image_url')->nullable();
 
             // Foreing Keys
             $table->foreign('step_id')->references('id')->on('steps')->onDelete('cascade');

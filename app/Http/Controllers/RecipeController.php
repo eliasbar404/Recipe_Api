@@ -107,7 +107,7 @@ class RecipeController extends Controller
         ];
     }
     //----- Get Recipes By Category -------
-    //-----------------------------------
+    //-------------------------------------
     public function Get_Recipe_By_Category($category_id){
         $recipes = Recipe::where('cagegory_id',$category_id)->get();
         return $recipes;

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('recipe_id');
             $table->longText('description');
-            $table->string('media')->nullable();
+            $table->string('image_url')->nullable();
 
             // Foreing Keys
             $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');

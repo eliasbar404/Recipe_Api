@@ -24,7 +24,7 @@ return new class extends Migration
 
             $table->enum('gender',['Male','Female'])->nullable();
             $table->longText('profile')->nullable();
-            $table->string('image')->nullable();
+            $table->string('profile_image_url')->nullable()->default('https://ik.imgkit.net/3vlqs5axxjf/BTNE/uploadedImages/import/bbt/2019/02/mysteriousguy-300px.jpg');
 
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
