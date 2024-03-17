@@ -221,7 +221,7 @@ class RecipeController extends Controller
                 Recipe_media::create([
                     "recipe_id"   =>$recipe_id,
                     // "type"        =>$request->images[$i]["type"],
-                    "image_url"       =>$request->images[$i]
+                    "image_url"       =>$request->images[$i]["image_url"]
                 ]);
             // }
         }
