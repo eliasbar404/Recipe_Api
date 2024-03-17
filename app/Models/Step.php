@@ -18,13 +18,13 @@ class Step extends Model
         'recipe_id',
         'step_number',
         'description',
-        'duration'
+        'duration',
     ];
 
     /**
      * Get the media associated with the step.
      */
-    public function media(): HasOne
+    public function image(): HasOne
     {
         return $this->hasOne(Step_media::class);
     }

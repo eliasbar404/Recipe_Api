@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Recipe;
 
 class Category extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $table = "categories";
 
@@ -20,8 +22,8 @@ class Category extends Model
     /**
      * Get the recipes for the category.
      */
-    public function recipes(): HasMany
+    public function recipes()
     {
-        return $this->hasMany(Recipe::class);
+        return $this->belongsToMany(Recipe::class);
     }
 }

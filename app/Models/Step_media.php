@@ -14,6 +14,6 @@ class Step_media extends Model
     protected $fillable = [
         'step_id',
         'type',
-        'media'
+        'image_url'
     ];
 }

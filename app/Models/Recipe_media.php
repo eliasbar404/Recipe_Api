@@ -13,7 +13,6 @@ class Recipe_media extends Model
 
     protected $fillable = [
         'recipe_id',
-        'type',
-        'media'
+        'image_url',
     ];
 }
