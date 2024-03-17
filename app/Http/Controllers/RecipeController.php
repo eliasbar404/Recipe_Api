@@ -10,6 +10,7 @@ use App\Models\Ingredient;
 use App\Models\Recipe_media;
 use App\Models\Review;
 use App\models\Favourite;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Str;
 
@@ -42,8 +43,7 @@ class RecipeController extends Controller
             $rating =count($rating_list) == 0? 0:array_sum($rating_list)/count($rating_list);
             array_push($final,[
                 "recipe"=>$recipe,
-                "medias"=>$recipe->medias,
-                "user"  =>$recipe->user,
+                "images"=>$recipe->images,
                 "rating"=>$rating,
             ]);
         };
@@ -98,12 +98,12 @@ class RecipeController extends Controller
 
         return [
             "recipe"       =>$recipe,
-            "user"         =>$recipe->user,
+            // "user"         =>$recipe->user,
             "reviews"      =>$reviews,
             "rating"       =>$rating, 
             "steps"        =>$recipe->steps,
             "ingredients"  =>$recipe->ingredients,
-            "medias"       =>$recipe->medias
+            "images"       =>$recipe->images
         ];
     }
     //----- Get Recipes By Category -------
@@ -119,29 +119,41 @@ class RecipeController extends Controller
         // ----------------------------------
         $request->validate([
 
-            "user_id"           =>"required",
-            "category_id"       =>"required",
+            // "user_id"           =>"required",
+            "categories"        =>"required|array",
             "title"             =>"required",
             "description"       =>"required",
             "difficulty"        =>"required",
             "time"              =>"required",
-            "steps"             =>"required",
-            "ingredients"       =>"required",
-            "medias"            =>"required"
+            "steps"             =>"required|array",
+            "ingredients"       =>"required|array",
+            "images"            =>"required|array"
 
         ]);
 
         // -----  Create Recipe and return ID ------
         // ----------------------------------------
         $recipe_id = Recipe::create([
-            "user_id"     =>$request->user_id,
-            "category_id" =>$request->category_id,
+            // "user_id"     =>$request->user_id,
+            // "category_id" =>$request->category_id,
             "title"       =>$request->title,
             "description" =>$request->description,
             "difficulty"  =>$request->difficulty,
             "time"        =>$request->time,
             "origin"      =>$request->origin,
         ])->id;
+
+
+                    // Save Recipe Categories
+                    for($i=0;$i<count($request->categories);$i++){
+
+                        if(isset($request["categories"][$i])){
+                            DB::table('category_recipe')->insert([
+                                "recipe_id"    =>$recipe_id,
+                                "category_id"  =>$request->categories[$i]
+                            ]);
+                        }
+                    }
 
         //-----Save Recipe Steps-----------
         // -------------------------------
@@ -156,35 +168,35 @@ class RecipeController extends Controller
 
             // $array = $request["files"]["steps_media"];
             // $item  = $request["files"]["steps_media"][$i];
-            if(isset($request["files"]["steps_media"][$i])){
+            // if(isset($request["files"]["steps_media"][$i])){
 
-                $filename = Str::random(32).".".$request["files"]["steps_media"][$i]->getClientOriginalExtension();
-                $request["files"]["steps_media"][$i]->move('uploads/', $filename);
+            //     $filename = Str::random(32).".".$request["files"]["steps_media"][$i]->getClientOriginalExtension();
+            //     $request["files"]["steps_media"][$i]->move('uploads/', $filename);
     
-                Step_media::create([
-                    "step_id"=>$step_id,
-                    "media"  =>$filename,
-                    "type"   =>$request->steps[$i]["type"]
-                ]);
-            }
+            //     Step_media::create([
+            //         "step_id"=>$step_id,
+            //         "media"  =>$filename,
+            //         "type"   =>$request->steps[$i]["type"]
+            //     ]);
+            // }
 
         }
         //-----Save Recipe Ingredients-----------
         // -------------------------------
         for($i=0;$i<count($request->ingredients);$i++){
 
-            $filename = isset($request["files"]["ingredients_media"][$i])?(Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension()):null;
-            // $filename = Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension();
-            if(isset($request["files"]["ingredients_media"][$i])){
+            // $filename = isset($request["files"]["ingredients_media"][$i])?(Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension()):null;
+            // // $filename = Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension();
+            // if(isset($request["files"]["ingredients_media"][$i])){
 
-                $request["files"]["ingredients_media"][$i]->move('uploads/', $filename);
+            //     $request["files"]["ingredients_media"][$i]->move('uploads/', $filename);
 
-            }
+            // }
 
                 Ingredient::create([
-                    "recipe_id"   =>$recipe_id,
-                    "description" =>$request->ingredients[$i]["description"],
-                    "media"       =>$filename
+                    "recipe_id"      =>$recipe_id,
+                    "description"    =>$request->ingredients[$i]["description"],
+                    "image_url"      =>$request->ingredients[$i]["image_url"]
                 ]);
 
             
@@ -198,18 +210,18 @@ class RecipeController extends Controller
         }
         //-----Save Recipe Medias-----------
         // -------------------------------
-        for($i=0;$i<count($request->medias);$i++){
+        for($i=0;$i<count($request->images);$i++){
 
-            if(isset($request["files"]["recipe_media"][$i])){
+            if(isset($request["images"][$i])){
 
-                $filename = Str::random(32).".".$request["files"]["recipe_media"][$i]->getClientOriginalExtension();
-                $request["files"]["recipe_media"][$i]->move('uploads/', $filename);
+                // $filename = Str::random(32).".".$request["files"]["recipe_media"][$i]->getClientOriginalExtension();
+                // $request["files"]["recipe_media"][$i]->move('uploads/', $filename);
     
     
                 Recipe_media::create([
                     "recipe_id"   =>$recipe_id,
-                    "type"        =>$request->medias[$i]["type"],
-                    "media"       =>$filename
+                    // "type"        =>$request->images[$i]["type"],
+                    "image_url"       =>$request->images[$i]["image_url"]
                 ]);
             }
         }
