@@ -27,25 +27,31 @@ Route::group([
     Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/user-profile', [AuthController::class, 'userProfile']);    
 });
-// Gategory Routes
-Route::post('/categories', [CategoryController::class, 'setOne']); //Done
-Route::get('/categories',  [CategoryController::class, 'getAll']); //Done
-// Users Routes
 
-Route::post('/user', [UserController::class, 'updateUser']);
-Route::get('/user/{id}', [UserController::class, 'getUser']);
+//------- Gategory Routes ----------------
+//----------------------------------------
+Route::post('/categories', [CategoryController::class, 'setOne']);
+Route::get('/categories' , [CategoryController::class, 'getAll']);
+
+//------- Users Routes -------------------
+//----------------------------------------
+Route::post('/user'       , [UserController::class, 'updateUser']);
+Route::get('/user/{id}'   , [UserController::class, 'getUser']);
 Route::delete('/user/{id}', [UserController::class, 'deleteUser']);
+
+
+
+//------ Recipe Routes ----------------------
+//-------------------------------------------
+Route::post('/recipe'           ,[RecipeController::class, 'Set_Recipe']); //Done
+Route::get('/recipes'           ,[RecipeController::class, 'GetAll']);  // Done
+Route::get('/recipes/user/{id}' ,[RecipeController::class, 'Get_All_User_Recipe']); 
+Route::get('/recipe/{id}'       ,[RecipeController::class, 'GetOneById']);  // Done
+Route::post('/recipe/review'    ,[RecipeController::class, 'Recipe_review']);
+Route::post('/fav'              ,[RecipeController::class, 'add_fav']);
+Route::post('/fav/delete'       ,[RecipeController::class, 'delete_fav']);
+Route::get('/fav/{id}'          ,[RecipeController::class, 'get_all_fav']);
+
 
 // Route::post('/follow', [UserController::class, 'make_follow']);
 // Route::post('/follow/delete', [UserController::class, 'delete_follow']);
-
-// Recipe Routes
-Route::post('/recipe',  [RecipeController::class, 'Set_Recipe']); //Done
-Route::get('/recipes',   [RecipeController::class, 'GetAll']);  // Done
-Route::get('/recipes/user/{id}',   [RecipeController::class, 'Get_All_User_Recipe']); 
-Route::get('/recipe/{id}',   [RecipeController::class, 'GetOneById']);  // Done
-Route::post('/recipe/review',  [RecipeController::class, 'Recipe_review']);
-Route::post('/fav',  [RecipeController::class, 'add_fav']);
-Route::post('/fav/delete',  [RecipeController::class, 'delete_fav']);
-
-Route::get('/fav/{id}',  [RecipeController::class, 'get_all_fav']);

@@ -13,11 +13,10 @@ return new class extends Migration
     {
         Schema::create('recipe_media', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('recipe_id');
-            $table->string('image_url');
-
             // Foreing Keys
+            $table->unsignedBigInteger('recipe_id');
             $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('cascade');
+            $table->string('image_url');
             $table->timestamps();
         });
     }

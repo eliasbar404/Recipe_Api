@@ -5,21 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Recipe;
 use App\Models\Step;
-use App\Models\Step_media;
 use App\Models\Ingredient;
+use App\Models\Category;
 use App\Models\Recipe_media;
 use App\Models\Review;
 use App\models\Favourite;
 use Illuminate\Support\Facades\DB;
 
-use Illuminate\Support\Str;
-
-use function PHPUnit\Framework\isNull;
 
 class RecipeController extends Controller
 {
-    //----- Get All Recipes-------
-    //----------------------------
+
+    // Get All Recipes
     public function GetAll(){
         // $recipe = Recipe::find(20);
         // $steps = [];
@@ -48,32 +45,10 @@ class RecipeController extends Controller
             ]);
         };
         return $final;
-
-        // return $recipe;
-    }
-
-    //--------Get All recipes belong to a user -------
-    // -----------------------------------------------
-
-    public function Get_All_User_Recipe($id){
-
-        $recipes = Recipe::where('user_id',$id)->get();
-
-        return response([
-            "recipes"      =>$recipes,
-            "user"        =>$recipes[0]->user,
-        ]);
     }
 
 
-
-
-
-
-
-
-    //----- Get One Recipe By Id -------
-    //-----------------------------------
+    // Get One Recipe By Id
     public function GetOneById($id){
         $recipe = Recipe::find($id);
 
@@ -93,12 +68,8 @@ class RecipeController extends Controller
             $rating = floatval(array_sum($rating_list)/count($rating_list));
         }
 
-        
-        
-
         return [
             "recipe"       =>$recipe,
-            // "user"         =>$recipe->user,
             "reviews"      =>$reviews,
             "rating"       =>$rating, 
             "steps"        =>$recipe->steps,
@@ -106,20 +77,36 @@ class RecipeController extends Controller
             "images"       =>$recipe->images
         ];
     }
-    //----- Get Recipes By Category -------
-    //-------------------------------------
+
+
+    // Get Recipes By Category 
     public function Get_Recipe_By_Category($category_id){
-        $recipes = Recipe::where('cagegory_id',$category_id)->get();
-        return $recipes;
+        $category = Category::find($category_id);
+        $recipes  = $category->recipes()->get();
+
+        $final = [];
+        foreach($recipes as $recipe){
+            $rating_list = [];
+            foreach(Recipe::find($recipe->id)->reviews as $review){
+                array_push($rating_list,$review->rating);
+            }
+            $rating =count($rating_list) == 0? 0:array_sum($rating_list)/count($rating_list);
+            array_push($final,[
+                "recipe"=>$recipe,
+                "images"=>$recipe->images,
+                "rating"=>$rating,
+            ]);
+        };
+
+        return $final;
     }
-    //----- Set Recipe  -----------------
-    //-----------------------------------
+
+
+    // Create New Recipe 
     public function Set_Recipe(Request $request){
         //------  Request Validation ---------
         // ----------------------------------
         $request->validate([
-
-            // "user_id"           =>"required",
             "categories"        =>"required",
             "title"             =>"required",
             "description"       =>"required",
@@ -128,14 +115,11 @@ class RecipeController extends Controller
             "steps"             =>"required",
             "ingredients"       =>"required",
             "images"            =>"required"
-
         ]);
 
         // -----  Create Recipe and return ID ------
         // ----------------------------------------
         $recipe_id = Recipe::create([
-            // "user_id"     =>$request->user_id,
-            // "category_id" =>$request->category_id,
             "title"       =>$request->title,
             "description" =>$request->description,
             "difficulty"  =>$request->difficulty,
@@ -144,104 +128,51 @@ class RecipeController extends Controller
         ])->id;
 
 
-                    // Save Recipe Categories
-                    for($i=0;$i<count($request->categories);$i++){
-
-                        if(isset($request["categories"][$i])){
-                            DB::table('category_recipe')->insert([
-                                "recipe_id"    =>$recipe_id,
-                                "category_id"  =>$request->categories[$i]
-                            ]);
-                        }
+        // Save Recipe Categories
+        for($i=0;$i<count($request->categories);$i++){
+                if(isset($request["categories"][$i])){
+                    DB::table('category_recipe')->insert([
+                            "recipe_id"    =>$recipe_id,
+                            "category_id"  =>$request->categories[$i]
+                        ]);
                     }
+                }
 
         //-----Save Recipe Steps-----------
         // -------------------------------
         for($i=0;$i<count($request->steps);$i++){
-
             $step_id = Step::create([
                 "recipe_id"   =>$recipe_id,
                 "step_number" =>$i+1,
                 "description" =>$request->steps[$i]["description"],
                 "duration"    =>$request->steps[$i]["duration"]
             ])->id;
-
-            // $array = $request["files"]["steps_media"];
-            // $item  = $request["files"]["steps_media"][$i];
-            // if(isset($request["files"]["steps_media"][$i])){
-
-            //     $filename = Str::random(32).".".$request["files"]["steps_media"][$i]->getClientOriginalExtension();
-            //     $request["files"]["steps_media"][$i]->move('uploads/', $filename);
-    
-            //     Step_media::create([
-            //         "step_id"=>$step_id,
-            //         "media"  =>$filename,
-            //         "type"   =>$request->steps[$i]["type"]
-            //     ]);
-            // }
-
         }
+
         //-----Save Recipe Ingredients-----------
         // -------------------------------
         for($i=0;$i<count($request->ingredients);$i++){
-
-            // $filename = isset($request["files"]["ingredients_media"][$i])?(Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension()):null;
-            // // $filename = Str::random(32).".".$request["files"]["ingredients_media"][$i]->getClientOriginalExtension();
-            // if(isset($request["files"]["ingredients_media"][$i])){
-
-            //     $request["files"]["ingredients_media"][$i]->move('uploads/', $filename);
-
-            // }
-
-                Ingredient::create([
-                    "recipe_id"      =>$recipe_id,
-                    "description"    =>$request->ingredients[$i]["description"],
-                    "image_url"      =>$request->ingredients[$i]["image_url"]
-                ]);
-
-            
-
-        
-
-
-
-
-
+            Ingredient::create([
+                "recipe_id"      =>$recipe_id,
+                "description"    =>$request->ingredients[$i]["description"],
+                "image_url"      =>$request->ingredients[$i]["image_url"]
+            ]);
         }
         //-----Save Recipe Medias-----------
         // -------------------------------
         for($i=0;$i<count($request->images);$i++){
-
-            // if(isset($request["images"][$i])){
-
-                // $filename = Str::random(32).".".$request["files"]["recipe_media"][$i]->getClientOriginalExtension();
-                // $request["files"]["recipe_media"][$i]->move('uploads/', $filename);
-    
-    
-                Recipe_media::create([
-                    "recipe_id"   =>$recipe_id,
-                    // "type"        =>$request->images[$i]["type"],
-                    "image_url"       =>$request->images[$i]["image_url"]
-                ]);
-            // }
+            Recipe_media::create([
+                "recipe_id"   =>$recipe_id,
+                "image_url"       =>$request->images[$i]["image_url"]
+            ]);
         }
-    
 
+        return response("Create Recipe Successfuly");
 
-
-
-
-        // if ($request->hasFile('recipe_medias')) {
-            // $filename = Str::random(32).".".$request["files"]["recipe_media"][0]->getClientOriginalExtension();
-            // return response($filename);
-
-        // }
-        return response("done!");
-
-}
+    }
         
 
-    
+    // Create New Review
     public function Recipe_review(Request $request){
 
         $request->validate([
@@ -251,17 +182,6 @@ class RecipeController extends Controller
             "comment" => "required",
         ]);
 
-        // Review::firstOrCreate(
-        //     [
-        //         "user_id"  =>$request->user_id,
-        //         "recipe_id"=>$request->recipe_id,
-        //     ]
-        //     ,[
-        //     "user_id"  =>$request->user_id,
-        //     "recipe_id"=>$request->recipe_id,
-        //     "rating"   =>$request->rating,
-        //     "comment"  =>$request->comment
-        // ]);
 
         Review::create([
             "user_id"  =>$request->user_id,
@@ -271,13 +191,12 @@ class RecipeController extends Controller
 
         ]);
 
-        return response("this is create");
-
-
-
+        return response("Create Review Successfully");
 
     }
 
+
+    // Add One Fav Recipe
     public function add_fav(Request $request){
 
         $request->validate([
@@ -300,6 +219,8 @@ class RecipeController extends Controller
 
     }
 
+
+    // Get User Saved Fav Recipes
     public function get_all_fav($id){
         
         $Favourite = Favourite::where("user_id",$id)->get();
@@ -322,12 +243,10 @@ class RecipeController extends Controller
             ]);
         };
         return $final;
-
-        // return $final;
-
     }
 
 
+    // Delete Saved Recipe
     public function delete_fav(Request $request){
         $request->validate([
             "user_id"=>"required",

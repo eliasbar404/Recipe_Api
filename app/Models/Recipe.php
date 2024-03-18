@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+
 use App\Models\Review;
+use App\Models\Category;
 
 
 class Recipe extends Model
@@ -66,13 +68,10 @@ class Recipe extends Model
         return $this->hasMany(Favourite::class);
     }
 
-    /**
-     * Get the user that owns the recipe.
-     */
-    // public function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 
 
 }
